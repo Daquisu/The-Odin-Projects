@@ -20,21 +20,40 @@ function playRound(playerSelection, computerSelection) {
         return `Tied! Both players chose ${capitalizedPlayer}`
     }
     if ((capitalizedPlayer == 'Paper' && computerSelection == 'Rock') ||
-        (capitalizedPlayer == 'Rock' && computerSelection == 'Scissors') ||
-        (capitalizedPlayer == 'Scissors' && computerSelection == 'Paper')) {
+            (capitalizedPlayer == 'Rock' && computerSelection == 'Scissors') ||
+            (capitalizedPlayer == 'Scissors' && computerSelection == 'Paper')) {
             return `You win! ${capitalizedPlayer} beats ${computerSelection}`;
         }
     return `You lose! ${computerSelection} beats ${capitalizedPlayer}`;
 }
 
-function game() {
-    let computerSelection;
-    let playerSelection;
-    let result;
-    for (let i = 0; i < 5; ++i) {
-        playerSelection = prompt('Insert your play');
-        computerSelection = computerPlay();
-        result = playRound(playerSelection, computerSelection);
-        console.log(result);
-    }
-}
+const buttons = document.querySelectorAll('input');
+
+// we use the .forEach method to iterate through each button
+buttons.forEach((button) => {
+    // and for each one we add a 'click' listener
+    button.addEventListener('click', function(e) {
+        const playerscore = document.querySelector('#player-score');
+        const computerscore = document.querySelector('#computer-score')
+        if (parseInt(playerscore.textContent.slice(-1)) + parseInt(computerscore.textContent.slice(-1)) < 5) {
+            computerSelection = computerPlay();
+            const body = document.querySelector('body');
+            const div = document.createElement('div');
+            body.append(div);
+            text = playRound(this.id, computerSelection);
+            playerWon = text.includes('win');
+            playerLose = text.includes('lose');
+            div.textContent = text;
+            var scoretext;
+            if (playerWon) {
+                scoretext = playerscore.textContent;
+                playerscore.textContent = scoretext.slice(0, -1) + (parseInt(scoretext.slice(-1)) + 1); 
+            } else if (playerLose) {
+                scoretext = computerscore.textContent;
+                computerscore.textContent = scoretext.slice(0, -1) + (parseInt(scoretext.slice(-1)) + 1); 
+            }
+        } else {
+            console.log(parseInt(playerscore.textContent));
+        }
+    });
+});
